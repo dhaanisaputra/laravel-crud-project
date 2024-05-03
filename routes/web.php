@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +15,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 //route resource
-Route::resource('/post', \App\Http\Controllers\PostController::class);
 Route::get('/', function () {
     return view('welcome');
+});
+
+//route auth
+Route::group(['middleware' => 'guest'], function () {
+    Route::get('/register', [AuthController::class, 'register'])->name('register');
+    Route::post('/register', [AuthController::class, 'registerPost'])->name('register');
+    Route::get('/login', [LoginController::class, 'login'])->name('login');
+    Route::post('/login', [LoginController::class, 'loginPost'])->name('loginPost');
+});
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::delete('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::resource('/post', \App\Http\Controllers\PostController::class);
 });
