@@ -14,6 +14,11 @@ class LoginController extends Controller
 
     public function loginPost(Request $request)
     {
+        $request->validate([
+            'email' => 'required',
+            'password' => 'required',
+        ]);
+
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
